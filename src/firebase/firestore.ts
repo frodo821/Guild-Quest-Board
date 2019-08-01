@@ -3,10 +3,17 @@ import 'firebase/firebase-firestore';
 import config from './firebase.env'
 import { User } from './datatype';
 
+/**
+ * Firebase SDKの初期化
+ */
 export function initialize() {
   firebase.initializeApp(config);
 }
 
+/**
+ * ユーザーの認証情報からユーザーのデータを取得
+ * @param authInfo ユーザーの認証情報
+ */
 export async function fetchUserData(authInfo: firebase.auth.UserCredential) {
   let ref = firebase.firestore().collection('users').doc(authInfo.user!!.uid);
   let doc = await ref.get();
@@ -24,6 +31,10 @@ export async function fetchUserData(authInfo: firebase.auth.UserCredential) {
   return {user: new_user, created: true};
 }
 
+/**
+ * ユーザーデータを更新
+ * @param user 新しいユーザーデータ
+ */
 export async function updateUserData(user: User) {
   let {id, ...data} = user;
   await firebase.firestore().collection('users').doc(id).set(data);
