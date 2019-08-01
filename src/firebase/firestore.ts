@@ -8,7 +8,7 @@ export function initialize() {
 }
 
 export async function fetchUserData(authInfo: firebase.auth.UserCredential) {
-  let ref = firebase.firestore().collection('users').doc(authInfo.user.uid);
+  let ref = firebase.firestore().collection('users').doc(authInfo.user!!.uid);
   let doc = await ref.get();
   if(doc.exists) {
     return {user: Object.assign({id: doc.id}, doc.data()) as User, created: false}
