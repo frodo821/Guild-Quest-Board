@@ -23,3 +23,8 @@ export async function fetchUserData(authInfo: firebase.auth.UserCredential) {
   ref.set(new_user);
   return {user: new_user, created: true};
 }
+
+export async function updateUserData(user: User) {
+  let {id, ...data} = user;
+  await firebase.firestore().collection('users').doc(id).set(data);
+}
