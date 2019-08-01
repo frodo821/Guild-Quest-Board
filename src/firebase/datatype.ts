@@ -2,19 +2,20 @@ export interface ID {
   id: string
 }
 
-export interface User {
+export interface User extends ID {
   exp: number,
   name: string,
-  title: string,
+  title?: string,
   last_logged_in: number,
   login_streak: number
 }
 
-export interface Quest {
+export interface Quest extends ID {
   rank: number,
   difficulty: number,
   title: string,
-  description: string
+  description: string,
+  until_date: number
 }
 
 export interface Title extends ID {
@@ -27,7 +28,7 @@ const exp_to_next_rank = [100, 140, 260, 420, 660, 900, 1200, 1800];
 const rank_title = ['F', 'E', 'D', 'C', 'B', 'A', 'S', 'SS', 'SSS+'];
 
 export function getRankTitle(user: User) {
-  return rank_title[getRank(user)];
+  return rank_title[getRank(user).rank];
 }
 
 export function getRank(user: User) {
@@ -36,8 +37,8 @@ export function getRank(user: User) {
     const item = exp_to_next_rank[idx];
     cur -= item;
     if(cur < 0) {
-      return idx;
+      return {rank: idx, current: (item + cur) / item, remained: -cur};
     }
   }
-  return exp_to_next_rank.length;
+  return {rank: exp_to_next_rank.length, current: 1, remained: 0};
 }
